@@ -1,0 +1,47 @@
+#include <stdio.h>
+#include <ctype.h>
+
+#define MAX_LENGTH 100
+#define MAX_TOKEN_LENGTH 100
+
+int main() {
+    char input[MAX_LENGTH];
+    int i, j;
+    int in_comment = 0;
+    char current_token[MAX_TOKEN_LENGTH];
+
+    printf("Enter the input: ");
+    fgets(input, MAX_LENGTH, stdin);
+
+    for (i = 0; input[i] != '\0'; i++) {
+        // check for start of comment
+        if (input[i] == '/' && input[i + 1] == '*') {
+            in_comment = 1;
+            i++;
+            continue;
+        }
+        // check for end of comment
+        if (input[i] == '*' && input[i + 1] == '/') {
+            in_comment = 0;
+            i++;
+            continue;
+        }
+        // ignore spaces, tabs, and new lines within comments
+        if (in_comment) {
+            continue;
+        }
+        // ignore redundant spaces, tabs, and new lines
+        if (input[i] == ' ' || input[i] == '\t' || input[i] == '\n') {
+            continue;
+        }
+        // start of new token
+        j = 0;
+        while (isalnum(input[i]) || input[i] == '_') {
+            current_token[j++] = input[i++];
+        }
+        current_token[j] = '\0';
+        printf("Token: %s\n", current_token);
+    }
+
+    return 0;
+}
